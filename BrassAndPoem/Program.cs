@@ -221,7 +221,7 @@ void UpdateProduct(List<Product> products, List<ProductType> productTypes)
     products.Select((product, index) => $"{index + 1}. {product.Name}")
             .ToList()
             .ForEach(Console.WriteLine);
-    
+
     int response;
     while (!int.TryParse(Console.ReadLine().Trim(), out response) || response < 1 || response > products.Count)
     {
@@ -247,10 +247,10 @@ void UpdateProduct(List<Product> products, List<ProductType> productTypes)
             UpdateName(chosenProduct);
             break;
         case 2:
-            // UpdatePrice(chosenProduct);
+            UpdatePrice(chosenProduct);
             break;
         case 3:
-            // UpdateProductTypeId(chosenProduct);
+            UpdateProductTypeId(chosenProduct);
             break;
     }
 }
@@ -274,6 +274,41 @@ void UpdateName(Product product)
     product.Name = name;
 }
 
+void UpdatePrice(Product product)
+{
+    Console.WriteLine("What would you like to change the price to?");
+    string priceInput = Console.ReadLine().Trim();
+
+    if (decimal.TryParse(priceInput, out decimal price))
+    {
+        product.Price = price;
+        Console.WriteLine("Price updated successfully.");
+    }
+}
+
+void UpdateProductTypeId(Product product)
+{
+    Console.WriteLine(@"What would you like to change the product type to?
+    1. Brass
+    2. Poem");
+    string productTypeIdInput = Console.ReadLine().Trim();
+
+    if (int.TryParse(productTypeIdInput, out int productTypeId))
+    {
+        if (productTypeId >= 1 && productTypeId <= 2)
+        {
+            if (productTypeId != product.ProductTypeId)
+            {
+                product.ProductTypeId = productTypeId;
+                Console.WriteLine("Product type updated successfully.");
+            }
+            else
+            {
+                Console.WriteLine("This is the current product type. No changes made");
+            }
+        }
+    }
+}
 
 
 
