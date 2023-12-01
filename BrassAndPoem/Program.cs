@@ -41,7 +41,7 @@ void DisplayMenu()
     string choice = null;
     while (choice != "0")
     {
-        Console.WriteLine(@"
+    Console.WriteLine(@"
     Please choose an option:
     1. Display all products 
     2. Add new product 
@@ -67,7 +67,7 @@ void DisplayMenu()
         }
         else if (choice == "4")
         {
-            // DeleteProduct();
+            DeleteProduct(products.ToList(), productTypes);
         }
         else if (choice == "5")
         {
@@ -85,7 +85,7 @@ void DisplayAllProducts(List<Product> products, List<ProductType> productTypes)
     ");
 
     List<string> productDescriptions = products
-        .Select((product, index) => 
+        .Select((product, index) =>
         $"{index + 1}. {product.Name} - ${product.Price}")
         .ToList();
 
@@ -97,15 +97,56 @@ void DisplayAllProducts(List<Product> products, List<ProductType> productTypes)
 
 void DeleteProduct(List<Product> products, List<ProductType> productTypes)
 {
+    Console.WriteLine(@"
+    Select the number of the product you would like to delete:
+    ");
+
+    List<string> productDescriptions = products
+        .Select((product, index) =>
+        $"{index + 1}. {product.Name}")
+        .ToList();
+
+    foreach (var description in productDescriptions)
+    {
+        Console.WriteLine(description);
+    }
+
+    int response;
+    while (!int.TryParse(Console.ReadLine().Trim(), out response) || response < 1 || response > products.Count)
+    {
+        Console.WriteLine("Choose a valid number");
+    }
+
+    Product chosenProduct = products[response - 1];
+    Console.WriteLine(@$"
+    You chose: {chosenProduct.Name}
+    Are you sure you want to delete this product?
+    Enter Y for YES, enter any other key for NO. ");
+    string input = Console.ReadLine().Trim().ToUpper();
+
+    if (input == "Y")
+    {
+        products.RemoveAt(response - 1);
+        Console.WriteLine($"{chosenProduct.Name} has been deleted");
+    }
+    else
+    {
+        Console.WriteLine("Product not deleted. Back to the Main Menu.");
+    }
 }
 
 void AddProduct(List<Product> products, List<ProductType> productTypes)
 {
+
 }
 
 void UpdateProduct(List<Product> products, List<ProductType> productTypes)
 {
+
 }
+
+
+
 
 // don't move or change this!
 public partial class Program { }
