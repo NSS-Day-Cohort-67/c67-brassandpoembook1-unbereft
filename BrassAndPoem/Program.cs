@@ -63,7 +63,7 @@ void DisplayMenu()
         }
         else if (choice == "3")
         {
-            // UpdateProduct();
+            UpdateProduct(products, productTypes);
         }
         else if (choice == "4")
         {
@@ -213,9 +213,65 @@ void AddProduct(List<Product> products, List<ProductType> productTypes)
     }
 }
 
+// todo: Prompt the user to enter the updated name, price and product type for the product (in that order). If the user presses enter without typing anything, leave the property unchanged.
+
 void UpdateProduct(List<Product> products, List<ProductType> productTypes)
 {
+    Console.WriteLine(@"Please choose the number of the product you'd like to update: ");
+    products.Select((product, index) => $"{index + 1}. {product.Name}")
+            .ToList()
+            .ForEach(Console.WriteLine);
+    
+    int response;
+    while (!int.TryParse(Console.ReadLine().Trim(), out response) || response < 1 || response > products.Count)
+    {
+        Console.WriteLine("Choose a valid number.");
+    }
 
+    Product chosenProduct = products[response - 1];
+    Console.WriteLine(@$"You chose: {chosenProduct.Name}
+    What property would you like to update?
+    1. Name
+    2. Price
+    3. Product Type");
+
+    int choice;
+    while (!int.TryParse(Console.ReadLine().Trim(), out choice) || choice < 1 || choice > 3)
+    {
+        Console.WriteLine("Choose a valid number.");
+    }
+
+    switch (choice)
+    {
+        case 1:
+            UpdateName(chosenProduct);
+            break;
+        case 2:
+            // UpdatePrice(chosenProduct);
+            break;
+        case 3:
+            // UpdateProductTypeId(chosenProduct);
+            break;
+    }
+}
+
+void UpdateName(Product product)
+{
+    Console.WriteLine("What would you like to change the name to?");
+    string name = Console.ReadLine().Trim();
+
+    if (string.IsNullOrWhiteSpace(name))
+    {
+        Console.WriteLine("Please enter a valid name.");
+        return;
+    }
+    else if (name.Any(char.IsDigit))
+    {
+        Console.WriteLine("Invalid input. Name should not contain numbers");
+        return;
+    }
+
+    product.Name = name;
 }
 
 
