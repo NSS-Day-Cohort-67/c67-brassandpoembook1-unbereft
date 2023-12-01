@@ -1,7 +1,7 @@
 ﻿
 //create a "products" variable here to include at least five Product instances. Give them appropriate ProductTypeIds.
 
-Product[] products = new Product[]
+List<Product> products = new List<Product>()
 {
     new Product {Name = "Antique Trombone", Price = 199.99m, ProductTypeId = 1},
     new Product {Name = "Alto Saxophone", Price = 149.99m, ProductTypeId = 1},
@@ -41,7 +41,7 @@ void DisplayMenu()
     string choice = null;
     while (choice != "0")
     {
-    Console.WriteLine(@"
+        Console.WriteLine(@"
     Please choose an option:
     1. Display all products 
     2. Add new product 
@@ -55,11 +55,11 @@ void DisplayMenu()
         }
         else if (choice == "1")
         {
-            DisplayAllProducts(products.ToList(), productTypes);
+            DisplayAllProducts(products, productTypes);
         }
         else if (choice == "2")
         {
-            // AddProduct();
+            AddProduct(products, productTypes);
         }
         else if (choice == "3")
         {
@@ -67,7 +67,7 @@ void DisplayMenu()
         }
         else if (choice == "4")
         {
-            DeleteProduct(products.ToList(), productTypes);
+            DeleteProduct(products, productTypes);
         }
         else if (choice == "5")
         {
@@ -137,7 +137,80 @@ void DeleteProduct(List<Product> products, List<ProductType> productTypes)
 
 void AddProduct(List<Product> products, List<ProductType> productTypes)
 {
+    Product product = new Product();
+    string name = "";
 
+    while (true)
+    {
+        Console.WriteLine(@"
+        What is the name of the new product?");
+        name = Console.ReadLine().Trim();
+
+        if (!string.IsNullOrWhiteSpace(name) && !name.Any(char.IsDigit))
+        {
+            break;
+        }
+        Console.WriteLine(@"
+        Invalid input. Please enter a valid name without numbers.");
+    }
+    product.Name = name;
+
+    Console.WriteLine(@"
+    What is the price of this product (in 00.00 format)?");
+
+    string priceInput = Console.ReadLine().Trim();
+    if (decimal.TryParse(priceInput, out decimal price))
+    {
+        if (price > 0)
+        {
+            product.Price = price;
+        }
+        else
+        {
+            Console.WriteLine(@"Invalid input. Price cannot be negative.");
+            return;
+        }
+    }
+    else
+    {
+        Console.WriteLine("Invalid input. Enter a valid decimal value.");
+        return;
+    }
+
+    Console.WriteLine(@"What type of product is this?
+    1. Brass
+    2. Poem");
+
+    string productTypeIdInput = Console.ReadLine().Trim();
+
+    while (int.TryParse(productTypeIdInput, out int productTypeId))
+    {
+        if (productTypeId > 0 && productTypeId < 3)
+        {
+            product.ProductTypeId = productTypeId;
+            break;
+        }
+        Console.WriteLine("Invalid input. Try again.");
+        productTypeIdInput = Console.ReadLine().Trim();
+    }
+
+    Console.Write(@"Please verify the information you entered is correct: 
+    ");
+    Console.WriteLine($@"
+    Product Name: {product.Name}
+    Product Price: ${product.Price}
+    Product Type: {product.ProductTypeId}");
+
+    Console.WriteLine("Is this information correct? (Y/N)");
+    if (Console.ReadLine().Trim().ToUpper() == "Y")
+    {
+        products.Add(product);
+        Console.WriteLine("Product submitted successfully. Back to Main Menu.");
+    }
+    else
+    {
+        Console.WriteLine("Try again!");
+    }
 }
 
 void UpdateProduct(List<Product> products, List<ProductType> productTypes)
